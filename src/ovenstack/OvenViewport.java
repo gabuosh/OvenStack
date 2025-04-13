@@ -169,8 +169,17 @@ public class OvenViewport extends javax.swing.JFrame {
         double weight;
         String bestBefore, timeAdded;
         cake = ComboFlavour.getSelectedItem();
-        weight = Double.parseDouble(WeightField.getText());
+        try{
+            weight = Double.parseDouble(WeightField.getText());
+        } catch (NumberFormatException e){
+            DisplayArea.setText("Invalid weight. Please enter a number. \n");
+            return;
+        }
         bestBefore = BBField.getText();
+        if (bestBefore.isEmpty()){
+            DisplayArea.setText("Please enter a best-before date. \n");
+            return;
+        }
         timeAdded = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
         if(oi.isFull()){
             DisplayArea.setText("The oven is full, add max 5 cakes" + "\n");
@@ -178,12 +187,12 @@ public class OvenViewport extends javax.swing.JFrame {
         }
         String item = cake.toString() + " | " + weight + "kg | Best Before: " + bestBefore;
         oi.push(item);
-        DisplayArea.append("A " + cake + " cake was added, with " + weight + "g | Best Before: " + bestBefore + "\n");
+        DisplayArea.append("A " + cake + " cake was added, with " + weight + "g | Best Before: " + bestBefore + " | Added at: " + timeAdded + "\n");
     }//GEN-LAST:event_AddButtonActionPerformed
 
     private void LastCakeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LastCakeActionPerformed
         if (!oi.isEmpty()){
-            DisplayArea.append("The cakes in the oven are: " + oi.displayStack());
+            DisplayArea.append(oi.displayStack());
         } else {
             DisplayArea.append("No cakes in the oven" + "\n");
         }
