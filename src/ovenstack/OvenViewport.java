@@ -173,6 +173,10 @@ public class OvenViewport extends javax.swing.JFrame {
         cake = ComboFlavour.getSelectedItem();
         try{
             weight = Double.parseDouble(WeightField.getText());
+            if (weight < 50 || weight > 1000){
+                DisplayArea.setText("Weight must be between 50g and 1000g. \n");
+                return;
+            }
         } catch (NumberFormatException e){
             DisplayArea.setText("Invalid weight. Please enter a number. \n");
             return;
@@ -182,9 +186,28 @@ public class OvenViewport extends javax.swing.JFrame {
             DisplayArea.setText("Please enter a best-before date. \n");
             return;
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        
         try{
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate.parse(bestBefore, formatter);
+            LocalDate parsedDate = LocalDate.parse(bestBefore, formatter);
+            
+            int year = parsedDate.getYear();
+            int month = parsedDate.getMonthValue();
+            int day = parsedDate.getDayOfMonth();
+            
+            if (day < 1 || day > 31 || month < 1 || month > 12 || year < 2025){
+                DisplayArea.setText("Invalid best before date. Please enter a valid date after 01/01/2025. \n");
+                return;
+            }
+            
+            LocalDate currentDate = LocalDate.now();
+            LocalDate maxBestBefore = currentDate.plusWeeks(2);
+            
+            if(parsedDate.isAfter(maxBestBefore)){
+                DisplayArea.setText("Invalid best before date. The date should be within 2 weeks from now. \n");
+                return;
+            }
         }catch (DateTimeParseException e){
             DisplayArea.setText("Invalid date format. Please enter DD/MM/YYYY \n");
             return;
