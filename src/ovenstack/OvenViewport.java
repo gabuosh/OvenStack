@@ -1,6 +1,8 @@
 package ovenstack;
 import java.time.LocalTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 /**
  *
  * @author zzano
@@ -178,6 +180,13 @@ public class OvenViewport extends javax.swing.JFrame {
         bestBefore = BBField.getText();
         if (bestBefore.isEmpty()){
             DisplayArea.setText("Please enter a best-before date. \n");
+            return;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        try{
+            LocalDate.parse(bestBefore, formatter);
+        }catch (DateTimeParseException e){
+            DisplayArea.setText("Invalid date format. Please enter DD/MM/YYYY \n");
             return;
         }
         timeAdded = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
