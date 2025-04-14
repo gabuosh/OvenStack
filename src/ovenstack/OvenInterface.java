@@ -13,6 +13,5 @@ public interface OvenInterface {
     public boolean isFull();
     public void push(Object newItem);
     public Object pop();
-    public void emptyStack();
     public String displayStack();
 }
